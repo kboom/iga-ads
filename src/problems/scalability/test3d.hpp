@@ -24,14 +24,6 @@ public:
     , executor{threads}
     { }
 
-    double init_state(double x, double y, double z) {
-        double dx = x - 0.5;
-        double dy = y - 0.5;
-        double dz = z - 0.5;
-        double r2 = std::min(8 * (dx * dx + dy * dy + dz * dz), 1.0);
-        return (r2 - 1) * (r2 - 1) * (r2 + 1) * (r2 + 1);
-    };
-
 private:
     void solve(vector_type& v) {
         Base::solve(v);
@@ -45,8 +37,13 @@ private:
     void before() override {
         prepare_matrices();
 
-        auto init = [this](double x, double y, double z) { return init_state(x, y, z); };
-        projection(u, init);
+        for (int i = 0; i < x.dofs(); ++ i) {
+            for (int j = 0; j < y.dofs(); ++ j) {
+                for (int k = 0; k < z.dofs(); ++ k) {
+                    u(i, j, k) = 1;
+                }
+            }
+        }
         solve(u);
     }
 
@@ -64,8 +61,8 @@ private:
         double dx = x - 0.5;
         double dy = y - 0.5;
         double dz = z - 0.5;
-        double r = std::sqrt(dx * dx + dy * dy) + dz * dz;
-        return std::exp(- r);
+        double r = std::sqrt(dx * dx + dy * dy + dz * dz);
+        return std::exp(- r) + 1 + std::cos(M_PI * x) * std::cos(M_PI * y) * std::cos(M_PI * z);
     }
 
     void compute_rhs() {

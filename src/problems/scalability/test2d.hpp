@@ -43,9 +43,11 @@ private:
 
     void before() override {
         prepare_matrices();
-
-        auto init = [this](double x, double y) { return init_state(x, y); };
-        projection(u, init);
+        for (int i = 0; i < x.dofs(); ++ i) {
+            for (int j = 0; j < y.dofs(); ++ j) {
+                u(i, j) = 1;
+            }
+        }
         solve(u);
     }
 
@@ -63,7 +65,7 @@ private:
         double dx = x - 0.5;
         double dy = y - 0.5;
         double r = std::sqrt(dx * dx + dy * dy);
-        return std::exp(- r);
+        return std::exp(- r) + 1 + std::cos(M_PI * x) * std::cos(M_PI * y);
     }
 
     void compute_rhs() {
