@@ -117,9 +117,14 @@ if (NOT SKIP_PROBLEMS)
 
     define_problem(validation
       src/problems/validation/main.cpp)
+
+    define_problem(scalability
+      src/problems/scalability/main.cpp)
+
   endif()
 
   define_problem(heat_3d
     src/problems/heat/heat_3d.cpp)
+
 
 endif()
