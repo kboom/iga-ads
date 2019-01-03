@@ -16,10 +16,6 @@ pipeline {
         }
     }
 
-    options {
-        timeout time: 24, unit:'HOURS'
-    }
-
     environment {
         GIT_URL = "${scm.userRemoteConfigs[0].url}"
         GIT_BRANCH = "cahn-hilliard"
