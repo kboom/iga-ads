@@ -15,19 +15,23 @@ pipeline {
     parameters {
         string(
             name: 'ORDER',
-            defaultValue: "3"
+            defaultValue: "3",
+            description: 'The order of B-Splines being used. Most likely the default value - 3'
         )
         string(
             name: 'ELEMENTS',
-            defaultValue: "200"
+            defaultValue: "200",
+            description: 'The numer of elements along each dimension (200 means 200x200 elements in mesh)'
         )
         string(
             name: 'STEPS',
-            defaultValue: "250000"
+            defaultValue: "250000",
+            description: 'The number of steps to simulate'
         )
         string(
             name: 'DELTA',
-            defaultValue: "0.0000000001"
+            defaultValue: "0.0000000001",
+            description: 'Starting time step length. Note that this has to be small. The solver will try to increase the time step to find the longest time step for which the simulations remain stable.'
         )
         string(
             name: 'MOBILITY_FORMULA',
@@ -49,6 +53,11 @@ pipeline {
                 return 0.1;
             }
             """
+        )
+        string(
+            name: 'EMAIL_RECIPIENTS',
+            description: 'Comma-separated recipients of the email notifications (after the tasks are done or failed)',
+            defaultValue: ""
         )
     }
 
@@ -174,6 +183,42 @@ pipeline {
         always {
             cleanWs()
         }
+        success {  
+             mail(
+                 subject: "Cahn-Hilliard simulations no. ${BUILD_NUMBER} are complete",
+                 to: "${EMAIL_RECIPIENTS}",
+                 from: 'jenkins@a2s.agh.edu.pl',
+                 body: '''
+                    Download the results from:
+                    <ul>
+                        <li>
+                        <a href="https://jenkins.a2s.agh.edu.pl/pub/$BUILD_NUMBER/movies.zip">Movies</a>
+                        </li>
+                        <li>
+                        <a href="https://jenkins.a2s.agh.edu.pl/pub/$BUILD_NUMBER/images.zip">Images</a>
+                        </li>
+                    </ul>
+                 ''',
+                 charset: 'UTF-8',
+                 mimeType: 'text/html',
+                 replyTo: 'gurgul.grzegorz@gmail.com'
+             )
+         }  
+         failure {  
+             mail(
+                 subject: "Cahn-Hilliard simulations no. ${BUILD_NUMBER} failed",
+                 to: "${EMAIL_RECIPIENTS}",
+                 from: 'jenkins@a2s.agh.edu.pl',
+                 body: '''
+                    The simulations failed.
+                    Please see the <a href="https://jenkins.a2s.agh.edu.pl/job/IGA-ADS-SCAN/job/cahn-hilliard/$BUILD_NUMBER/console">logs</a>.
+                    Reply to this e-mail if you want to report an issue.
+                 ''',
+                 charset: 'UTF-8',
+                 mimeType: 'text/html',
+                 replyTo: 'gurgul.grzegorz@gmail.com'
+             )
+         }  
     }
     
 }
