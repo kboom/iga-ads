@@ -47,11 +47,11 @@ pipeline {
             name: 'INITIAL_SURFACE_SNIPPET',
             description: 'CPP code snippet which should return a value in x,y (x,y are double inputs)',
             defaultValue: """
-            if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38)*(y-0.38)<=0.2*0.2 ) {
-                return 0.8;
-            } else {
-                return 0.1;
-            }
+if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38)*(y-0.38)<=0.2*0.2 ) {
+    return 0.8;
+} else {
+    return 0.1;
+}
             """
         )
         string(
