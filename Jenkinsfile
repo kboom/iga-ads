@@ -1,13 +1,3 @@
-def problem = load('jenkins/simulations/mergingDroplets.groovy')
-
-def defaultOrder = problem.defaultOrder()
-def defaultElements = problem.defaultElements()
-def defaultSteps = problem.defaultSteps()
-def defaultDelta = problem.defaultDelta()
-def defaultMobilityFormula = problem.defaultMobilityFormula()
-def defaultChemicalPotentialFormula = problem.defaultChemicalPotentialFormula()
-def defaultInitialSurfaceSnippet = problem.defaultInitialSurfaceSnippet()
-
 pipeline {
 
     agent { 
@@ -25,34 +15,40 @@ pipeline {
     parameters {
         string(
             name: 'ORDER',
-            defaultValue: defaultOrder
+            defaultValue: "3"
         )
         string(
             name: 'ELEMENTS',
-            defaultValue: defaultElements
+            defaultValue: "200"
         )
         string(
             name: 'STEPS',
-            defaultValue: defaultSteps
+            defaultValue: "250000"
         )
         string(
             name: 'DELTA',
-            defaultValue: defaultDelta
+            defaultValue: "0.0000000001"
         )
         string(
             name: 'MOBILITY_FORMULA',
             description: 'Formulae for mobility. Variable is x, constants are theta and lambda. Do not use spaces.',
-            defaultValue: defaultMobilityFormula
+            defaultValue:  "800*x*(1-x)"
         )
         string(
             name: 'CHEMICAL_POTENTIAL_FORMULA',
             description: 'Formulae for chemical potential. Variable is x, constants are theta and lambda. Do not use spaces.',
-            defaultValue: defaultChemicalPotentialFormula
+            defaultValue: "4*(x^3-6*x^2+2*x)"
         )
         text(
             name: 'INITIAL_SURFACE_SNIPPET',
             description: 'CPP code snippet which should return a value in x,y (x,y are double inputs)',
-            defaultValue: defaultInitialSurfaceSnippet
+            defaultValue: """
+            if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38)*(y-0.38)<=0.2*0.2 ) {
+                return 0.8;
+            } else {
+                return 0.1;
+            }
+            """
         )
     }
 
