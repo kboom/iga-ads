@@ -20,7 +20,7 @@ pipeline {
         )
         string(
             name: 'ELEMENTS',
-            defaultValue: "80",
+            defaultValue: "50",
             description: 'The numer of elements along each dimension (200 means 200x200 elements in mesh)'
         )
         string(
