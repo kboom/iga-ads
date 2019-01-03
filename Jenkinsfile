@@ -20,12 +20,12 @@ pipeline {
         )
         string(
             name: 'ELEMENTS',
-            defaultValue: "200",
+            defaultValue: "80",
             description: 'The numer of elements along each dimension (200 means 200x200 elements in mesh)'
         )
         string(
             name: 'STEPS',
-            defaultValue: "250000",
+            defaultValue: "200",
             description: 'The number of steps to simulate'
         )
         string(
