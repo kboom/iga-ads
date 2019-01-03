@@ -1,22 +1,12 @@
-static final def PHASE_SEPARATION_SIMULATION = "phase separation"
-static final def TUMOR_GROWTH_SIMULATION = "tumor growth"
-static final def TUMOR_MERGING_SIMULATION = "tumor merging"
-static final def CUSTOM_SIMULATION = "custom"
-static final def PREDEFINED_SIMULATION_TYPES = [
-    PHASE_SEPARATION_SIMULATION,
-    TUMOR_GROWTH_SIMULATION,
-    TUMOR_MERGING_SIMULATION,
-    CUSTOM_SIMULATION
-]
+def problem = load('jenkins/simulations/mergingDroplets.groovy')
 
-env.PHASE_SEPARATION_SIMULATION = PHASE_SEPARATION_SIMULATION
-env.TUMOR_GROWTH_SIMULATION = TUMOR_GROWTH_SIMULATION
-env.TUMOR_MERGING_SIMULATION = TUMOR_MERGING_SIMULATION
-env.CUSTOM_SIMULATION = CUSTOM_SIMULATION
-
-
-def problem
-def solverConfig
+def defaultOrder = problem.defaultOrder()
+def defaultElements = problem.defaultElements()
+def defaultSteps = problem.defaultSteps()
+def defaultDelta = problem.defaultDelta()
+def defaultMobilityFormula = problem.defaultMobilityFormula()
+def defaultChemicalPotentialFormula = problem.defaultChemicalPotentialFormula()
+def defaultInitialSurfaceSnippet = problem.defaultInitialSurfaceSnippet()
 
 pipeline {
 
@@ -37,92 +27,40 @@ pipeline {
     }
 
     parameters {
-        choice(
-            name: 'SIMULATION_TYPE',
-            description: 'The type of the simulation to run. Predefined simulations contain sensible defaults.',
-            choices: PREDEFINED_SIMULATION_TYPES
+        string(
+            name: 'ORDER',
+            defaultValue: defaultOrder
         )
-        booleanParam(
-            name: 'CUSTOMIZE',
-            description: 'If the selected choice should be customized. If so, you will be prompeted for input during job execution.',
-            defaultValue: false
+        string(
+            name: 'ELEMENTS',
+            defaultValue: defaultElements
+        )
+        string(
+            name: 'STEPS',
+            defaultValue: defaultSteps
+        )
+        string(
+            name: 'DELTA',
+            defaultValue: defaultDelta
+        )
+        string(
+            name: 'MOBILITY_FORMULA',
+            description: 'Formulae for mobility. Variable is x, constants are theta and lambda. Do not use spaces.',
+            defaultValue: defaultMobilityFormula
+        )
+        string(
+            name: 'CHEMICAL_POTENTIAL_FORMULA',
+            description: 'Formulae for chemical potential. Variable is x, constants are theta and lambda. Do not use spaces.',
+            defaultValue: defaultChemicalPotentialFormula
+        )
+        text(
+            name: 'INITIAL_SURFACE_SNIPPET',
+            description: 'CPP code snippet which should return a value in x,y (x,y are double inputs)',
+            defaultValue: defaultInitialSurfaceSnippet
         )
     }
 
     stages {
-
-        stage("Configure") {
-            steps {
-                echo "Loading defaults for ${params.SIMULATION_TYPE}"
-                script {
-                    problem = load(problemScriptFor(params.SIMULATION_TYPE))
-                }
-                script {
-                    env.ORDER = problem.defaultOrder()
-                    env.ELEMENTS = problem.defaultElements()
-                    env.STEPS = problem.defaultSteps()
-                    env.DELTA = problem.defaultDelta()
-                    env.MOBILITY_FORMULA = problem.defaultMobilityFormula()
-                    env.CHEMICAL_POTENTIAL_FORMULA = problem.defaultChemicalPotentialFormula()
-                    env.INITIAL_SURFACE_SNIPPET = problem.defaultInitialSurfaceSnippet()
-                }
-            }
-        }
-
-        stage("Define problem") {
-            
-            when {
-                expression { params.CUSTOMIZE }
-            }
-
-            options {
-                timeout(time:15, unit:'MINUTES')
-            }
-
-            steps {
-                script {
-
-                    input(
-                        message: 'Customize defaults',
-                        parameters: [
-                            string(
-                                name: 'ORDER',
-                                defaultValue: "${ORDER}"
-                            ),
-                            string(
-                                name: 'ELEMENTS',
-                                defaultValue: "${ELEMENTS}"
-                            ),
-                            string(
-                                name: 'STEPS',
-                                defaultValue: "${STEPS}"
-                            ),
-                            string(
-                                name: 'DELTA',
-                                defaultValue: "${DELTA}"
-                            ),
-                            string(
-                                name: 'MOBILITY_FORMULA',
-                                description: 'Formulae for mobility. Variable is x, constants are theta and lambda. Do not use spaces.',
-                                defaultValue: "${MOBILITY_FORMULA}"
-                            ),
-                            string(
-                                name: 'CHEMICAL_POTENTIAL_FORMULA',
-                                description: 'Formulae for chemical potential. Variable is x, constants are theta and lambda. Do not use spaces.',
-                                defaultValue: "${CHEMICAL_POTENTIAL_FORMULA}"
-                            ),
-                            text(
-                                name: 'INITIAL_SURFACE_SNIPPET',
-                                description: 'CPP code snippet which should return a value in x,y (x,y are double inputs)',
-                                defaultValue: "${INITIAL_SURFACE_SNIPPET}"
-                            ),
-                        ]
-                    ).each { name, value ->
-                        env[name] = value
-                    }
-                }
-            }
-        }
 
         stage('Checkout') {
             steps {
@@ -246,19 +184,4 @@ pipeline {
         }
     }
     
-}
-
-@NonCPS
-def problemScriptFor(String type) {
-    def simulationDir = 'jenkins/simulations'
-    switch(type) {
-        case { it == env.PHASE_SEPARATION_SIMULATION}:
-            return "${simulationDir}/phaseSeparation.groovy"
-        case { it == env.TUMOR_GROWTH_SIMULATION}:
-            return "${simulationDir}/tumorGrowth.groovy"
-        case { it == env.TUMOR_MERGING_SIMULATION}:
-            return "${simulationDir}/mergingTumors.groovy"
-        default:
-            return "${simulationDir}/custom.groovy"
-    }
 }
