@@ -166,7 +166,7 @@ if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38
                     zip images.zip *.png
                     zip movies.zip *.mp4
 
-                    RESULTS_DIR=/home/proj/jenkins_pub/pub/sim-$BUILD_NUMBER/
+                    RESULTS_DIR=/home/proj/jenkins_pub/pub/ch-$BUILD_NUMBER/
 
                     mkdir $RESULTS_DIR
                     cp images.zip $RESULTS_DIR/
@@ -192,10 +192,10 @@ if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38
                     Download the results from:
                     <ul>
                         <li>
-                        <a href="https://jenkins.a2s.agh.edu.pl/pub/$BUILD_NUMBER/movies.zip">Movies</a>
+                        <a href="https://jenkins.a2s.agh.edu.pl/pub/ch-$BUILD_NUMBER/movies.zip">Movies</a>
                         </li>
                         <li>
-                        <a href="https://jenkins.a2s.agh.edu.pl/pub/$BUILD_NUMBER/images.zip">Images</a>
+                        <a href="https://jenkins.a2s.agh.edu.pl/pub/ch-$BUILD_NUMBER/images.zip">Images</a>
                         </li>
                     </ul>
                  ''',
