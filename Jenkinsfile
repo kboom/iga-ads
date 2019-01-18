@@ -199,17 +199,17 @@ if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38
                  subject: "Cahn-Hilliard simulations no. ${BUILD_NUMBER} are complete",
                  to: "${EMAIL_RECIPIENTS}",
                  from: 'jenkins@a2s.agh.edu.pl',
-                 body: '''
+                 body: """
                     Download the results from:
                     <ul>
                         <li>
-                        <a href="https://jenkins.a2s.agh.edu.pl/pub/ch-$BUILD_NUMBER/movies.zip">Movies</a>
+                        <a href="https://jenkins.a2s.agh.edu.pl/pub/ch-${BUILD_NUMBER}/movies.zip">Movies</a>
                         </li>
                         <li>
-                        <a href="https://jenkins.a2s.agh.edu.pl/pub/ch-$BUILD_NUMBER/images.zip">Images</a>
+                        <a href="https://jenkins.a2s.agh.edu.pl/pub/ch-${BUILD_NUMBER}/images.zip">Images</a>
                         </li>
                     </ul>
-                 ''',
+                 """,
                  charset: 'UTF-8',
                  mimeType: 'text/html',
                  replyTo: 'gurgul.grzegorz@gmail.com'
@@ -220,11 +220,11 @@ if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38
                  subject: "Cahn-Hilliard simulations no. ${BUILD_NUMBER} failed",
                  to: "${EMAIL_RECIPIENTS}",
                  from: 'jenkins@a2s.agh.edu.pl',
-                 body: '''
+                 body: """
                     The simulations failed.
-                    Please see the <a href="https://jenkins.a2s.agh.edu.pl/job/IGA-ADS-SCAN/job/cahn-hilliard/$BUILD_NUMBER/console">logs</a>.
+                    Please see the <a href="https://jenkins.a2s.agh.edu.pl/job/IGA-ADS-SCAN/job/cahn-hilliard/${BUILD_NUMBER}/console">logs</a>.
                     Reply to this e-mail if you want to report an issue.
-                 ''',
+                 """,
                  charset: 'UTF-8',
                  mimeType: 'text/html',
                  replyTo: 'gurgul.grzegorz@gmail.com'
