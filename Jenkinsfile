@@ -59,6 +59,11 @@ if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38
             description: 'Comma-separated recipients of the email notifications (after the tasks are done or failed)',
             defaultValue: ""
         )
+        booleanParam(
+            name: 'PLOT_RELATIVE',
+            description: 'Whether to use a relative scale in each timeframe for plotting results or not',
+            defaultValue: false
+        )
     }
 
     stages {
@@ -159,7 +164,13 @@ if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38
             steps {
                 sh '''#!/bin/bash
                     cd OUT
-                    gnuplot plot
+
+                    if [ "$PLOT_RELATIVE" = true ]; then
+                        gnuplot plot_relative
+                    else
+                        gnuplot plot
+                    fi
+
                     ./movie
                     echo "Compressing results\n"
                     zip data.zip *.data
