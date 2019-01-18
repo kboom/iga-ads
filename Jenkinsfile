@@ -166,7 +166,7 @@ if ( (x-0.65)*(x-0.65)+(y-0.65)*(y-0.65)<=0.15*0.15 || (x-0.38)*(x-0.38)+(y-0.38
                     cd OUT
 
                     if [ "$PLOT_RELATIVE" = true ]; then
-                        gnuplot plot_relative
+                        gnuplot plotrel
                     else
                         gnuplot plot
                     fi
