@@ -43,3 +43,6 @@
     name: jenkins
     state: "{{ jenkins_package_state }}"
   notify: configure default users
+
+  # Update Jenkins and install configured plugins.
+- include_tasks: plugins.yml
