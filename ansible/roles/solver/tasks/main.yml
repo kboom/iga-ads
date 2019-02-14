@@ -1,0 +1,7 @@
+---
+---
+- name: Install dependencies
+  import_tasks: dependencies.yml
+
+- name: Install galois
+  import_tasks: galois.yml

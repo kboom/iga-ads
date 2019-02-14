@@ -1,0 +1,6 @@
+---
+- hosts: slave
+  gather_facts: False
+  roles:
+  - solver
+  - jenkins-slave

@@ -1,0 +1,4 @@
+---
+- hosts: ci
+  roles:
+    - toolchain

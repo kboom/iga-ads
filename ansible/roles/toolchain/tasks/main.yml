@@ -1,0 +1,11 @@
+---
+- name: Install toolchain
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items:
+    - htop
+    - vim
+    - wget

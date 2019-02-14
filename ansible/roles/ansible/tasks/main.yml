@@ -1,0 +1,10 @@
+- name: Make sure Python is installed
+  import_tasks: python.yml
+
+- name: Make sure Ansible is installed
+  import_tasks: ansible.yml
+
+- name: Configure bastion connection
+  import_tasks: bastion.yml
+
+  

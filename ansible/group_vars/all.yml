@@ -1,0 +1,5 @@
+jenkinsUser: jenkins
+libsDir: /opt
+galoisDir: '{{ libsDir }}/galois'
+galoisSrc: http://iss.ices.utexas.edu/projects/galois/downloads/Galois-2.2.1.tar.gz
+ansible_python_interpreter: /usr/bin/python3

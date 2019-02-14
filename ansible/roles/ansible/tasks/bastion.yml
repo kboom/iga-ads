@@ -1,0 +1,23 @@
+---
+- set_fact:
+    has_bastion: "{{ 'bastion' in groups['all'] }}"
+
+- set_fact:
+    bastion_ip: "{{ hostvars['bastion']['ansible_host'] }}"
+  when: has_bastion
+
+- set_fact:
+    bastion_port: "{{ hostvars['bastion']['ansible_port'] }}"
+  when: has_bastion
+
+- set_fact:
+    real_user: "{{ ansible_user }}"
+  delegate_to: bastion
+  when: has_bastion
+
+- name: create ssh bastion conf
+  become: false
+  template:
+    src: ssh.conf
+    dest: "{{ playbook_dir }}/../../ssh.conf"
+  when: has_bastion

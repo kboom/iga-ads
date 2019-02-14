@@ -1,0 +1,5 @@
+---
+- import_playbook: localhost/setup.yml
+- import_playbook: toolchain/setup.yml
+- import_playbook: jenkins/create-master.yml
+- import_playbook: jenkins/add-slaves.yml

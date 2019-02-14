@@ -1,0 +1,6 @@
+---
+- name: Install ansible dependencies
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - ansible
