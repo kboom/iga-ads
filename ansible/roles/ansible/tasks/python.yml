@@ -12,7 +12,7 @@
     - debug:
         msg: "Running python {{ python_version.stdout }}"
 
-- name: Fail if python is not 3.7.1
+- name: Fail if python is not 3.7.2
   fail:
-    msg: "Python 3.7.1 is required. Currently in use: {{ python_version.stdout }}"
-  when: python_version.stdout != "Python 3.7.1"
+    msg: "Python 3.7.2 is required. Currently in use: {{ python_version.stdout }}"
+  when: python_version.stdout != "Python 3.7.2"
