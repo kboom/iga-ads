@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         GIT_URL = "${scm.userRemoteConfigs[0].url}"
-        GIT_BRANCH = "multistep"
         BUILD_NUMBER = "${env.BUILD_NUMBER}"
     }
 
@@ -100,13 +99,14 @@ pipeline {
                     ${DELTA} \
                     > errors.sum
                 '''
-                stash name: 'results', includes: '*.data,*.sum'
+                stash name: 'results', includes: 'results/*.data,*.sum'
             }
         }
 
         stage('Process results') {
             steps {
                 sh '''#!/bin/bash
+                    cd results
                     gnuplot plot
                     ./movie
                     echo "Compressing results\n"
