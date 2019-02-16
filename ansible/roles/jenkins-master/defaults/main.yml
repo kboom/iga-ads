@@ -2,6 +2,7 @@ jenkins_repo_key_url: https://pkg.jenkins.io/debian/jenkins-ci.org.key
 jenkins_repo_url: deb http://pkg.jenkins.io/debian binary/
 jenkins_version: 2.164
 jenkins_home: /var/lib/jenkins
+jenkins_init_file: /etc/default/jenkins
 jenkins_hostname: localhost
 jenkins_http_port: 8080
 jenkins_admin_username: admin
@@ -15,8 +16,15 @@ jenkins_connection_delay: 5
 jenkins_connection_retries: 60
 jenkins_java_options:
 jenkins_url_prefix: ""
+jenkins_plugins: []
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
     value: "--prefix={{ jenkins_url_prefix }}"
   - option: "JENKINS_JAVA_OPTIONS"
     value: "{{ jenkins_java_options }}"
+
+jenkins_jar_location: /opt/jenkins-cli.jar
+jenkins_process_user: jenkins
+jenkins_process_group: "{{ jenkins_process_user }}"
+jenkins_http_port_param: HTTP_PORT
+jenkins_java_options_env_var: JAVA_ARGS
