@@ -1,8 +1,6 @@
 ---
 # This installs Galois and makes it accessible for the solver
 - name: compile Galois
-  become: yes
-  become_user: "{{ k8user }}"
   block:
     - unarchive:
         src: '{{ galoisSrc }}'

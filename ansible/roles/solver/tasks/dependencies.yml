@@ -1,6 +1,6 @@
 ---
 # This installs all OS-level dependencies which are available
-- name: Install toolchain
+- name: Install solver dependencies
   become: yes
   apt:
     name: "{{ item }}"

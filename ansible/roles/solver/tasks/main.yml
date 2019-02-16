@@ -1,7 +1,3 @@
 ---
-# This installs all dependencies needed to run IGA-ADS solver
-- name: Install dependencies
-  import_tasks: dependencies.yml
-
-- name: Install galois
-  import_tasks: galois.yml
+- import_tasks: dependencies.yml
+- import_tasks: galois.yml
