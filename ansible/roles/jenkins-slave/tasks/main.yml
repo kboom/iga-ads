@@ -1,0 +1,26 @@
+---
+
+- set_fact:
+    jenkins_master: "{{ groups['master'] }}"
+
+- name: Create jenkins user
+  user: 
+    name: jenkins
+    home: "{{ jenkins_slave_home }}"
+    shell: /bin/bash
+    comment: "Jenkins slave user"
+
+- name: Create .ssh folder
+  file:
+    path: "${jenkins_slave_home}/.ssh"
+    state: directory
+    mode: 0700
+    owner: jenkins
+
+- name: Add passwordless connection for jenkins
+  authorized_key:
+    user: jenkins
+    key: "xxxxxxxxxxxxxx jenkins@{{ jenkins_master }}"
+
+- name: Update authorized_keys rights
+  file: path=${jenkins_home}/.ssh/authorized_keys state=file mode=0600 owner=jenkins

@@ -16,4 +16,4 @@
         cmake -DBoost_INCLUDE_DIR=/usr/include -DSKIP_COMPILE_APPS=ON ../..
       args:
         chdir: $HOME
-        creates: kubecfg.p12
+        creates: galoisInstalled

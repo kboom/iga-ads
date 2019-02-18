@@ -17,9 +17,10 @@ jenkins_connection_retries: 60
 jenkins_java_options:
 jenkins_url_prefix: ""
 jenkins_plugins: []
+jenkins_jks: "{{ jenkins_home }}/jenkins.jks"
 jenkins_init_changes:
   - option: "JENKINS_ARGS"
-    value: "--prefix={{ jenkins_url_prefix }}"
+    value: "--prefix={{ jenkins_url_prefix }} --httpsPort=443 --httpsKeyStore=\"{{ jenkins_jks }}\" --httpsKeyStorePassword=\"agh2019\""
   - option: "JENKINS_JAVA_OPTIONS"
     value: "{{ jenkins_java_options }}"
 

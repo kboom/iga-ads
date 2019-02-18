@@ -1,6 +1,7 @@
 ---
 - include_tasks: install.yml
 - include_tasks: settings.yml
+- include_tasks: jks.yml
 
 # Make sure Jenkins starts, then configure Jenkins.
 - name: Ensure Jenkins is started and runs on startup.
