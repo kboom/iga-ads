@@ -2,12 +2,15 @@
 # This installs Galois and makes it accessible for the solver
 - name: compile Galois
   block:
+    - file:
+        path: '{{ galoisDir }}'
+        state: directory
     - unarchive:
         src: '{{ galoisSrc }}'
         dest: '{{ galoisDir }}'
         remote_src: yes
     - shell: 
-        cd Galois-2.2.1/build
+        cd '{{ galoisDir }}/Galois-2.2.1/build'
         mkdir release
         cd release
         cmake -DBoost_INCLUDE_DIR=/usr/include -DSKIP_COMPILE_APPS=ON ../..
