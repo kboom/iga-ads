@@ -65,8 +65,8 @@ private:
     }
 
     void print_errors(const vector_type& u, double t) const {
-        std::cout << " error " << errorL2(u, t) << " " << errorH1(u, t);
-        std::cout << " norm " << norm(u, x, y, L2{}) << " " << norm(u, x, y, H1{});
+        std::cout << errorL2(u, t) << "," << errorH1(u, t);
+        std::cout << "," << norm(u, x, y, L2{}) << "," << norm(u, x, y, H1{});
         std::cout << std::endl;
     }
 
@@ -83,8 +83,8 @@ private:
 
         int needed = us.size() - 1;
         for (int i = 0; i < needed; ++ i) {
-            double t = i * steps.dt;
-            auto init = [this,t](double x, double y) { return solution(x, y, t).val; };
+
+            auto init = [this,i](double x, double y) { return init_state(x, y, i); };
 
             projection(us[0], init);
             apply_bc(us[0]);
@@ -114,7 +114,7 @@ private:
 
     void after() override {
         double t = steps.dt * steps.step_count;
-        std::cout << steps.step_count << " " << t << " ";
+        std::cout << steps.step_count << "," << t << ",";
         print_errors(us[0], t);
     }
 
@@ -122,17 +122,14 @@ private:
         double tt = t + steps.dt;
         int ii = iter + 1;
 
-        // Output
-        // if (ii % 1000 == 0) {
-        //     output.to_file(us[0], "out_%d.data", iter);
-        //     validate(t);
-        // }
+        if (ii % 1000 == 0) {
+            output.to_file(us[0], "out_%d.data", iter);
+        }
 
-        // Error & norm reporting
-        // if (ii % 1000 == 0) {
-        //     std::cout << ii << " " << tt << " ";
-        //     print_errors(us[0], tt);
-        // }
+        if (ii % 1000 == 0) {
+            std::cout << ii << "," << tt << ",";
+            print_errors(us[0], tt);
+        }
     }
 
     double eval_basis_dxy(index_type e, index_type q, index_type a) const  {
@@ -182,7 +179,7 @@ private:
                     value_type v = eval_basis(e, q, a);
                     double vxy = eval_basis_dxy(e, q, a);
 
-                    double val = 0;
+                    double val = forcing(x[0], x[1]) * v.val;
 
                     for (int i = 0; i <= s; ++ i) {
                         double ti = tt - i * tau;
@@ -211,6 +208,17 @@ private:
         });
     }
 
+    double forcing(double x, double y) const {
+        (void)x;
+        (void)y;
+        // ##FORCINGSTART2D##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
+        // Cheap trick but works fine.
+        return 0;
+        // ##FORCINGEND2D##
+    }
+
     auto exact(double t) const {
         return [t,this](point_type x) {
             return solution(x[0], x[1], t);
@@ -237,6 +245,13 @@ private:
 
 
     value_type solution(double x, double y, double t) const {
+        (void)x;
+        (void)y;
+        (void)t;
+        // ##EXACTSTART2D##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
+        // Cheap trick but works fine.
         constexpr double k = 2 * M_PI * M_PI;
         double e = std::exp(-k * t);
 
@@ -245,10 +260,22 @@ private:
             e * M_PI * std::cos(x * M_PI) * std::sin(y * M_PI),
             e * M_PI * std::sin(x * M_PI) * std::cos(y * M_PI)
         };
+        // ##EXACTEND2D##
     }
 
-    double init_state(double x, double y) const {
-        return solution(x, y, 0).val;
+    double init_state(double x, double y, int i) const {
+        (void)x; // this is to avoid unused variable compilation error
+        (void)y; // this is to avoid unused variable compilation error
+        (void)i; // this is to avoid unused variable compilation error
+        // ##INITSTART##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the initial state accomodating different usage scenarios.
+        // Cheap trick but works fine.
+        constexpr double k = 2 * M_PI * M_PI;
+        double t = i * steps.dt;
+        double e = std::exp(-k * t); 
+        return e * std::sin(x * M_PI) * std::sin(y * M_PI);
+        // ##INITEND##
     }
 
 };

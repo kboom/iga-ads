@@ -73,8 +73,8 @@ private:
     }
 
     void print_errors(const vector_type& u, double t) const {
-        std::cout << " error " << errorL2(u, t) << " " << errorH1(u, t);
-        std::cout << " norm " << norm(u, x, y, z, L2{}) << " " << norm(u, x, y, z, H1{});
+        std::cout << errorL2(u, t) << "," << errorH1(u, t);
+        std::cout << "," << norm(u, x, y, z, L2{}) << "," << norm(u, x, y, z, H1{});
         std::cout << std::endl;
     }
 
@@ -91,8 +91,8 @@ private:
 
         int needed = us.size() - 1;
         for (int i = 0; i < needed; ++ i) {
-            double t = i * steps.dt;
-            auto init = [this,t](double x, double y, double z) { return solution(x, y, z, t).val; };
+
+            auto init = [this,i](double x, double y, double z) { return init_state(x, y, z, i); };
 
             projection(us[0], init);
             apply_bc(us[0]);
@@ -122,7 +122,7 @@ private:
 
     void after() override {
         double t = steps.dt * steps.step_count;
-        std::cout << steps.step_count << " " << t << " ";
+        std::cout << steps.step_count << "," << t << ",";
         print_errors(us[0], t);
     }
 
@@ -130,17 +130,14 @@ private:
         double tt = t + steps.dt;
         int ii = iter + 1;
 
-        // Output
-        // if (ii % 1000 == 0) {
-        //     output.to_file(us[0], "out_%d.data", iter);
-        //     validate(t);
-        // }
+        if (ii % 1000 == 0) {
+            output.to_file(us[0], "out_%d.data", iter);
+        }
 
-        // Error & norm reporting
-        // if (ii % 1 == 0) {
-        //     std::cout << ii << " " << tt << " ";
-        //     print_errors(us[0], tt);
-        // }
+        if (ii % 1 == 0) {
+            std::cout << ii << " " << tt << " ";
+            print_errors(us[0], tt);
+        }
     }
 
     double eval_basis_dxy(index_type e, index_type q, index_type a) const  {
@@ -269,8 +266,7 @@ private:
                     double vxz = eval_basis_dxz(e, q, a);
                     double vxyz = eval_basis_dxyz(e, q, a);
 
-                    double val = 0;
-
+                    double val = forcing(x[0], x[1], x[2]) * v.val;
 
                     for (int i = 0; i <= s; ++ i) {
                         double ti = tt - i * tau;
@@ -300,6 +296,18 @@ private:
         });
     }
 
+    double forcing(double x, double y, double z) const {
+        (void)x;
+        (void)y;
+        (void)z;
+        // ##FORCINGSTART3D##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
+        // Cheap trick but works fine.
+        return 0;
+        // ##FORCINGEND3D##
+    }
+
     auto exact(double t) const {
         return [t,this](point_type x) {
             return solution(x[0], x[1], x[2], t);
@@ -326,6 +334,14 @@ private:
 
 
     value_type solution(double x, double y, double z, double t) const {
+        (void)x;
+        (void)y;
+        (void)z;
+        (void)t;
+        // ##EXACTSTART3D##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
+        // Cheap trick but works fine.
         constexpr double k = 3 * M_PI * M_PI;
         double e = std::exp(-k * t);
 
@@ -333,12 +349,26 @@ private:
             e * std::sin(x * M_PI) * std::sin(y * M_PI) * std::sin(z * M_PI),
             e * M_PI * std::cos(x * M_PI) * std::sin(y * M_PI) * std::sin(z * M_PI),
             e * M_PI * std::sin(x * M_PI) * std::cos(y * M_PI) * std::sin(z * M_PI),
-            e * M_PI * std::sin(x * M_PI) * std::sin(y * M_PI) * std::cos(z * M_PI),
+            e * M_PI * std::sin(x * M_PI) * std::sin(y * M_PI) * std::cos(z * M_PI)
         };
+        // ##EXACTEND3D##
     }
 
-    double init_state(double x, double y, double z) const {
-        return solution(x, y, z, 0).val;
+    double init_state(double x, double y, double z, int i) const {
+        (void)x; // this is to avoid unused variable compilation error
+        (void)y; // this is to avoid unused variable compilation error
+        (void)z; // this is to avoid unused variable compilation error
+        (void)i; // this is to avoid unused variable compilation error
+        
+        // ##INITSTART##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the initial_state accomodating different usage scenarios.
+        // Cheap trick but works fine.
+        constexpr double k = 3 * M_PI * M_PI;
+        double t = i * steps.dt;
+        double e = std::exp(-k * t);
+        return e * std::sin(x * M_PI) * std::sin(y * M_PI) * std::sin(z * M_PI);
+        // ##INITEND##
     }
 
 };
