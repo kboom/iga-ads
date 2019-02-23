@@ -37,7 +37,7 @@ pipeline {
         )
         string(
             name: 'DELTA',
-            defaultValue: "0.001",
+            defaultValue: "0.00001",
             description: 'Time step length.'
         )
         string(
@@ -75,7 +75,12 @@ pipeline {
                     e * M_PI * std::sin(x * M_PI) * std::cos(y * M_PI)
                 };
             """
-        )
+        ),
+        string(
+            name: 'DOWNSAMPLE',
+            defaultValue: "1000",
+            description: 'Downsampling of data. The result will be saved every DOWNSAMPLE steps.'
+        ),
         string(
             name: 'EMAIL_RECIPIENTS',
             description: 'Comma-separated recipients of the email notifications (will be sent after success or failure)',
@@ -209,6 +214,7 @@ fi
                     ${ORDER} \
                     ${STEPS} \
                     ${DELTA} \
+                    ${DOWNSAMPLE} \
                     > errors.out
                 '''
                 stash name: 'results', includes: '*.data,*.out'

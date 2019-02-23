@@ -25,8 +25,10 @@ private:
     output_manager<2> output;
     galois_executor executor{8};
 
+    int dumpout;
+
 public:
-    multistep2d(const config_2d& config, scheme scm, int order)
+    multistep2d(const config_2d& config, scheme scm, int order, int dumpout)
     : Base{ config }
     , multistep_base{ std::move(scm), order }
     , us{ std::max(s + 1, 2), shape() }
@@ -35,6 +37,7 @@ public:
     , Ax_ctx{ Ax }
     , Ay_ctx{ Ay }
     , output{ x.B, y.B, 200 }
+    , dumpout(dumpout)
     {
     }
 
@@ -122,11 +125,11 @@ private:
         double tt = t + steps.dt;
         int ii = iter + 1;
 
-        if (ii % 1000 == 0) {
+        if (ii % dumpout == 0) {
             output.to_file(us[0], "out_%d.data", iter);
         }
 
-        if (ii % 1000 == 0) {
+        if (ii % dumpout == 0) {
             std::cout << ii << "," << tt << ",";
             print_errors(us[0], tt);
         }

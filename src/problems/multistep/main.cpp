@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
     auto order = std::atoi(argv[5]);
     auto nsteps = std::atoi(argv[6]);
     auto dt = std::atof(argv[7]);
+    auto dumpout = std::atof(argv[8]);
 
     dim_config dim{ p, n };
     timesteps_config steps{ nsteps, dt };
@@ -30,11 +31,11 @@ int main(int argc, char* argv[]) {
 
     if (D == 2) {
         config_2d c{dim, dim, steps, ders};
-        multistep2d sim{c, scm, order};
+        multistep2d sim{c, scm, order, dumpout};
         sim.run();
     } else if (D == 3) {
         config_3d c{dim, dim, dim, steps, ders};
-        multistep3d sim{c, scm, order};
+        multistep3d sim{c, scm, order, dumpout};
         sim.run();
     }
 }
