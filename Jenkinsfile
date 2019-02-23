@@ -220,6 +220,7 @@ fi
                 sh '''#!/bin/bash
                     echo 'Producing charts'
                     gnuplot plot_norm
+                    gnuplot plot_error
 
                     echo 'Creating movie'
                     gnuplot plot
@@ -233,7 +234,7 @@ fi
                     RESULTS_DIR=/home/proj/jenkins_pub/pub/multistep-$BUILD_NUMBER/
 
                     mkdir $RESULTS_DIR
-                    cp errors.png $RESULTS_DIR/
+                    cp *.png $RESULTS_DIR/
                     cp images.zip $RESULTS_DIR/
                     cp movies.zip $RESULTS_DIR/
                     cp data.zip $RESULTS_DIR/
