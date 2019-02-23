@@ -269,11 +269,11 @@ private:
                     double vxz = eval_basis_dxz(e, q, a);
                     double vxyz = eval_basis_dxyz(e, q, a);
 
-                    double val = forcing(x[0], x[1], x[2]) * v.val;
+                    double val = 0;
 
                     for (int i = 0; i <= s; ++ i) {
                         double ti = tt - i * tau;
-                        val += tau * bs[i] * force(x, ti);
+                        val += tau * bs[i] * force(x[0], x[1], x[2], ti);
                     }
                     for (int i = 1; i <= s; ++ i) {
                         auto u = uvals[i];
@@ -299,18 +299,6 @@ private:
         });
     }
 
-    double forcing(double x, double y, double z) const {
-        (void)x;
-        (void)y;
-        (void)z;
-        // ##FORCINGSTART3D##
-        // Do not remove this comment.
-        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
-        // Cheap trick but works fine.
-        return 0;
-        // ##FORCINGEND3D##
-    }
-
     auto exact(double t) const {
         return [t,this](point_type x) {
             return solution(x[0], x[1], x[2], t);
@@ -327,8 +315,16 @@ private:
 
     // Problem definition
 
-    double force(point_type /*x*/, double /*t*/) const {
+    double force(double x, double y, double z, double t) const {
+        (void)x;
+        (void)y;
+        (void)z;
+        // ##FORCINGSTART3D##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
+        // Cheap trick but works fine.
         return 0;
+        // ##FORCINGEND3D##
     }
 
     void apply_bc(vector_type& rhs) {
