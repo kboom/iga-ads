@@ -182,11 +182,11 @@ private:
                     value_type v = eval_basis(e, q, a);
                     double vxy = eval_basis_dxy(e, q, a);
 
-                    double val = forcing(x[0], x[1]) * v.val;
+                    double val = 0;
 
                     for (int i = 0; i <= s; ++ i) {
                         double ti = tt - i * tau;
-                        val += tau * bs[i] * force(x, ti);
+                        val += tau * bs[i] * force(x[0], x[1], ti);
                     }
                     for (int i = 1; i <= s; ++ i) {
                         auto u = uvals[i];
@@ -211,17 +211,6 @@ private:
         });
     }
 
-    double forcing(double x, double y) const {
-        (void)x;
-        (void)y;
-        // ##FORCINGSTART2D##
-        // Do not remove this comment.
-        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
-        // Cheap trick but works fine.
-        return 0;
-        // ##FORCINGEND2D##
-    }
-
     auto exact(double t) const {
         return [t,this](point_type x) {
             return solution(x[0], x[1], t);
@@ -238,8 +227,16 @@ private:
 
     // Problem definition
 
-    double force(point_type /*x*/, double /*t*/) const {
+    double force(double x, double y, double t) const {
+        (void)x;
+        (void)y;
+        (void)t;
+        // ##FORCINGSTART2D##
+        // Do not remove this comment.
+        // It is a marker for changing the source of the exact solution accomodating different usage scenarios.
+        // Cheap trick but works fine.
         return 0;
+        // ##FORCINGEND2D##
     }
 
     void apply_bc(vector_type& rhs) {
