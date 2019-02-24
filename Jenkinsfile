@@ -234,7 +234,7 @@ fi
 
                     echo "Compressing results\n"
                     zip data.zip *.data
-                    zip images.zip *.png
+                    zip images.zip *.data.png
                     zip movies.zip *.mp4
 
                     RESULTS_DIR=/home/proj/jenkins_pub/pub/multistep-$BUILD_NUMBER/
