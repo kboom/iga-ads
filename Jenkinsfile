@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         GIT_URL = "${scm.userRemoteConfigs[0].url}"
-        GIT_BRANCH = "cahn-hilliard"
+        GIT_BRANCH = "cahn-hilliard-jenkins"
         BUILD_NUMBER = "${env.BUILD_NUMBER}"
     }
 
